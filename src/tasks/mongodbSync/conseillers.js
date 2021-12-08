@@ -3,6 +3,9 @@
 
 const { execute } = require('../utils');
 const { encrypt } = require('../../utils/encrypt');
+const dayjs = require('dayjs');
+const dayOfYear = require('dayjs/plugin/dayOfYear');
+dayjs.extend(dayOfYear)
 
 execute(__filename, async ({ logger, db, dbDatalake }) => {
   const conseillers = await db.collection('conseillers').find({}).toArray();
@@ -12,19 +15,53 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
     promises.push(new Promise(async resolve => {
       count++;
 
-      // RGPD ❤️
-      delete conseiller.nom;
-      delete conseiller.prenom;
-      delete conseiller.email;
-      delete conseiller.telephone;
-      delete conseiller.structureId;
+      const whitelist = [
+        "_id",
+        "aUneExperienceMedNum",
+        "codeCom",
+        "codeCommune",
+        "codeDepartement",
+        "codePostal",
+        "codeRegion",
+        "createdAt",
+        "dateDeNaissance",
+        "dateDisponibilite",
+        "dateFinFormation",
+        "datePrisePoste",
+        "deletedAt",
+        "disponible",
+        "distanceMax",
+        "emailConfirmedAt",
+        "estDemandeurEmploi",
+        "estDiplomeMedNum",
+        "estEnEmploi",
+        "estEnFormation",
+        "importedAt",
+        "location",
+        "nomCommune",
+        "nomDiplomeMedNum",
+        "pix",
+        "sexe",
+        "sondageSentAt",
+        "statut",
+        "unsubscribedAt",
+        "updatedAt",
+        "userCreated",
+        "cv"
+      ];
 
-      // Security ❤️
+      for (const property in conseiller) {
+        if(!whitelist.includes(property)) {
+          delete conseiller[property];
+        }
+      }
+
       conseiller._id = encrypt(conseiller._id.toString());
-      delete conseiller.idPG;
-      delete conseiller.cv?.file;
-      delete conseiller.emailConfirmationKey;
-      delete conseiller.sondageToken;
+      if(conseiller.cv) {
+        conseiller.cv.file = encrypt(conseiller.cv.file);
+      }
+      delete conseiller.pix?.datePartage;
+      conseiller.dateDeNaissance = dayjs(conseiller.dateDeNaissance).dayOfYear(1).toDate();
 
       await dbDatalake.collection('conseillers').updateOne({ _id: conseiller._id }, { $set: conseiller }, { upsert: true });
       resolve();
