@@ -5,7 +5,7 @@ const { execute } = require('../utils');
 const { encrypt } = require('../../utils/encrypt');
 const dayjs = require('dayjs');
 const dayOfYear = require('dayjs/plugin/dayOfYear');
-dayjs.extend(dayOfYear)
+dayjs.extend(dayOfYear);
 
 execute(__filename, async ({ logger, db, dbDatalake }) => {
   const conseillers = await db.collection('conseillers').find({}).toArray();
@@ -16,48 +16,48 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
       count++;
 
       const whitelist = [
-        "_id",
-        "aUneExperienceMedNum",
-        "codeCom",
-        "codeCommune",
-        "codeDepartement",
-        "codePostal",
-        "codeRegion",
-        "createdAt",
-        "dateDeNaissance",
-        "dateDisponibilite",
-        "dateFinFormation",
-        "datePrisePoste",
-        "deletedAt",
-        "disponible",
-        "distanceMax",
-        "emailConfirmedAt",
-        "estDemandeurEmploi",
-        "estDiplomeMedNum",
-        "estEnEmploi",
-        "estEnFormation",
-        "importedAt",
-        "location",
-        "nomCommune",
-        "nomDiplomeMedNum",
-        "pix",
-        "sexe",
-        "sondageSentAt",
-        "statut",
-        "unsubscribedAt",
-        "updatedAt",
-        "userCreated",
-        "cv"
+        '_id',
+        'aUneExperienceMedNum',
+        'codeCom',
+        'codeCommune',
+        'codeDepartement',
+        'codePostal',
+        'codeRegion',
+        'createdAt',
+        'dateDeNaissance',
+        'dateDisponibilite',
+        'dateFinFormation',
+        'datePrisePoste',
+        'deletedAt',
+        'disponible',
+        'distanceMax',
+        'emailConfirmedAt',
+        'estDemandeurEmploi',
+        'estDiplomeMedNum',
+        'estEnEmploi',
+        'estEnFormation',
+        'importedAt',
+        'location',
+        'nomCommune',
+        'nomDiplomeMedNum',
+        'pix',
+        'sexe',
+        'sondageSentAt',
+        'statut',
+        'unsubscribedAt',
+        'updatedAt',
+        'userCreated',
+        'cv'
       ];
 
       for (const property in conseiller) {
-        if(!whitelist.includes(property)) {
+        if (!whitelist.includes(property)) {
           delete conseiller[property];
         }
       }
 
       conseiller._id = encrypt(conseiller._id.toString());
-      if(conseiller.cv) {
+      if (conseiller.cv) {
         conseiller.cv.file = encrypt(conseiller.cv.file);
       }
       delete conseiller.pix?.datePartage;
