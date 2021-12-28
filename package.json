@@ -20,7 +20,7 @@
     "config": "config/"
   },
   "engines": {
-    "node": "^14.0.0",
+    "node": "^16.0.0",
     "npm": ">= 3.0.0"
   },
   "scripts": {
@@ -49,5 +49,8 @@
     "mongodb": "^4.2.1",
     "serve-favicon": "^2.5.0",
     "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.5.0"
   }
 }

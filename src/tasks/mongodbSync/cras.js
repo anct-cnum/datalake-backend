@@ -13,14 +13,14 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
       count++;
 
       const whitelist = [
-        "_id",
-        "cra",
-        "conseiller",
-        "createdAt"
+        '_id',
+        'cra',
+        'conseiller',
+        'createdAt'
       ];
 
       for (const property in cra) {
-        if(!whitelist.includes(property)) {
+        if (!whitelist.includes(property)) {
           delete cra[property];
         }
       }
