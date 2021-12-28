@@ -1,0 +1,11 @@
+{
+  "host": "localhost",
+  "port": 8080,
+  "public": "../public/",
+  "paginate": {
+    "default": 10,
+    "max": 50
+  },
+  "mongodbDatalake": "mongodb://localhost:27017/datalake_backend",
+  "mongodb": "mongodb://localhost:27017/conseiller-numerique"
+}
