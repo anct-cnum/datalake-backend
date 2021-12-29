@@ -2,5 +2,10 @@
   "host": "HOST",
   "port": "PORT",
   "mongodbDatalake": "MONGODB_DATALAKE",
-  "mongodb": "MONGODB"
+  "mongodb": "MONGODB",
+  "metabase_pix": {
+    "endPoint": "PIX_METABASE_ENDPOINT",
+    "login": "PIX_METABASE_LOGIN",
+    "password": "PIX_METABASE_PASSWORD"
+  }
 }
