@@ -7,5 +7,10 @@
     "max": 50
   },
   "mongodbDatalake": "mongodb://localhost:27017/datalake_backend",
-  "mongodb": "mongodb://localhost:27017/conseiller-numerique"
+  "mongodb": "mongodb://localhost:27017/conseiller-numerique",
+  "metabase_pix": {
+    "endPoint": "PIX_METABASE_ENDPOINT",
+    "login": "PIX_METABASE_LOGIN",
+    "password": "PIX_METABASE_PASSWORD"
+  }
 }
