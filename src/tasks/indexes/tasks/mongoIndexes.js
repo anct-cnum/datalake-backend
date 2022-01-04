@@ -1,7 +1,6 @@
 module.exports = {
   structures: db => {
     return Promise.all([
-      db.collection('structures').createIndex({ 'idPG': 1 }),
       db.collection('structures').createIndex({ 'createdAt': -1 }),
       db.collection('structures').createIndex({ 'type': 1 }),
       db.collection('structures').createIndex({ 'statut': 1 }),
@@ -21,7 +20,6 @@ module.exports = {
   },
   conseillers: db => {
     return Promise.all([
-      db.collection('conseillers').createIndex({ 'idPG': 1 }),
       db.collection('conseillers').createIndex({ 'codeDepartement': 1 }),
       db.collection('conseillers').createIndex({ 'codeRegion': 1 }),
       db.collection('conseillers').createIndex({ 'location': '2dsphere' }),
