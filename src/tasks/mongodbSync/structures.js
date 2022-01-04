@@ -46,7 +46,8 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
         'unsubscribedAt',
         'updatedAt',
         'userCreated',
-        'validatedAt'
+        'validatedAt',
+        'reseau'
       ];
 
       for (const property in structure) {

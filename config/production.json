@@ -1,4 +1,11 @@
 {
-  "host": "datalake-backend-app.feathersjs.com",
-  "port": "PORT"
+  "host": "HOST",
+  "port": "PORT",
+  "mongodbDatalake": "MONGODB_DATALAKE",
+  "mongodb": "MONGODB",
+  "metabase_pix": {
+    "endPoint": "PIX_METABASE_ENDPOINT",
+    "login": "PIX_METABASE_LOGIN",
+    "password": "PIX_METABASE_PASSWORD"
+  }
 }
