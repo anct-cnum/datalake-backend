@@ -47,7 +47,9 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
         'unsubscribedAt',
         'updatedAt',
         'userCreated',
-        'cv'
+        'cv',
+        'estRecrute',
+        'userCreationError'
       ];
 
       for (const property in conseiller) {
