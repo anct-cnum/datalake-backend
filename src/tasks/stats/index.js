@@ -313,7 +313,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
           categorieJuridique: structure.insee?.entreprise?.forme_juridique ?? ''
         }) };
         const options = { upsert: true };
-        await db.collection('stats_StructuresValidees').updateOne(queryUpd, update, options);
+        await dbDatalake.collection('stats_StructuresValidees').updateOne(queryUpd, update, options);
       } catch (e) {
 
         logger.error(e);
