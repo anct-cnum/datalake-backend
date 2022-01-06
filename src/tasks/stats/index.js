@@ -227,7 +227,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
   let promises = [];
   const structuresValideesCoselec = await db.collection('structures').find({ statut: 'VALIDATION_COSELEC', userCreated: true }).toArray();
   //Vidage de la liste avant recréation (abandons...)
-  await db.collection('stats_StructuresValidees').deleteMany({});
+  await dbDatalake.collection('stats_StructuresValidees').deleteMany({});
   structuresValideesCoselec.forEach(structure => {
     promises.push(new Promise(async resolve => {
       try {
