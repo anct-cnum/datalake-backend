@@ -227,7 +227,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
   let promises = [];
   const structuresValideesCoselec = await db.collection('structures').find({ statut: 'VALIDATION_COSELEC', userCreated: true }).toArray();
   //Vidage de la liste avant recréation (abandons...)
-  await db.collection('stats_StructuresValidees').deleteMany({});
+  await dbDatalake.collection('stats_StructuresValidees').deleteMany({});
   structuresValideesCoselec.forEach(structure => {
     promises.push(new Promise(async resolve => {
       try {
@@ -313,7 +313,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
           categorieJuridique: structure.insee?.entreprise?.forme_juridique ?? ''
         }) };
         const options = { upsert: true };
-        await db.collection('stats_StructuresValidees').updateOne(queryUpd, update, options);
+        await dbDatalake.collection('stats_StructuresValidees').updateOne(queryUpd, update, options);
       } catch (e) {
 
         logger.error(e);
