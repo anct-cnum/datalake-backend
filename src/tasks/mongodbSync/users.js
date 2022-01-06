@@ -30,7 +30,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
 
       user._id = encrypt(user._id.toString());
 
-      await dbDatalake.collection('cras').updateOne({ _id: user._id }, { $set: user }, { upsert: true });
+      await dbDatalake.collection('users').updateOne({ _id: user._id }, { $set: user }, { upsert: true });
       resolve();
     }));
   });
