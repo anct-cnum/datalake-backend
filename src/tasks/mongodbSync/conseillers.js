@@ -63,7 +63,9 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
         conseiller.cv.file = encrypt(conseiller.cv.file);
       }
       delete conseiller.pix?.datePartage;
-      conseiller.dateDeNaissance = dayjs(conseiller.dateDeNaissance).dayOfYear(1).toDate();
+      if (conseiller.dateDeNaissance !== undefined) {
+        conseiller.dateDeNaissance = dayjs(conseiller.dateDeNaissance).dayOfYear(1).toDate();
+      }
 
       await dbDatalake.collection('conseillers').updateOne({ _id: conseiller._id }, { $set: conseiller }, { upsert: true });
       resolve();
