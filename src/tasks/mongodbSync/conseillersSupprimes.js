@@ -8,10 +8,10 @@ const dayOfYear = require('dayjs/plugin/dayOfYear');
 dayjs.extend(dayOfYear);
 
 execute(__filename, async ({ logger, db, dbDatalake }) => {
-  const conseillers = await db.collection('conseillers').find({}).toArray();
+  const conseillers = await db.collection('conseillersSupprimes').find({}).toArray();
   let count = 0;
   const promises = [];
-  conseillers.forEach(conseiller => {
+  conseillers.forEach(conseillerSupprime => {
     promises.push(new Promise(async resolve => {
       count++;
 
@@ -52,25 +52,28 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
         'userCreationError'
       ];
 
-      for (const property in conseiller) {
+      for (const property in conseillerSupprime.conseiller) {
         if (!whitelist.includes(property)) {
-          delete conseiller[property];
+          delete conseillerSupprime.conseiller[property];
         }
       }
 
-      conseiller._id = encrypt(conseiller._id.toString());
-      if (conseiller.cv) {
-        conseiller.cv.file = encrypt(conseiller.cv.file);
+      conseillerSupprime._id = encrypt(conseillerSupprime._id.toString());
+      conseillerSupprime.conseiller._id = encrypt(conseillerSupprime.conseiller._id.toString());
+      if (conseillerSupprime.conseiller.cv) {
+        conseillerSupprime.conseiller.cv.file = encrypt(conseillerSupprime.conseiller.cv.file);
       }
-      delete conseiller.pix?.datePartage;
-      if (conseiller.dateDeNaissance !== undefined) {
-        conseiller.dateDeNaissance = dayjs(conseiller.dateDeNaissance).dayOfYear(1).toDate();
+      delete conseillerSupprime.conseiller.pix?.datePartage;
+      if (conseillerSupprime.conseiller.dateDeNaissance !== undefined) {
+        conseillerSupprime.conseiller.dateDeNaissance = dayjs(conseillerSupprime.conseiller.dateDeNaissance).dayOfYear(1).toDate();
       }
 
-      await dbDatalake.collection('conseillers').updateOne({ _id: conseiller._id }, { $set: conseiller }, { upsert: true });
+      delete conseillerSupprime.actionUser.userId;
+
+      await dbDatalake.collection('conseillersSupprimes').updateOne({ _id: conseillerSupprime._id }, { $set: conseillerSupprime }, { upsert: true });
       resolve();
     }));
   });
   await Promise.all(promises);
-  logger.info(`${count} conseillers synced to datalake`);
+  logger.info(`${count} conseillersSupprimes synced to datalake`);
 });
