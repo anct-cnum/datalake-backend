@@ -68,7 +68,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
         conseillerSupprime.conseiller.dateDeNaissance = dayjs(conseillerSupprime.conseiller.dateDeNaissance).dayOfYear(1).toDate();
       }
 
-      delete conseillerSupprime.actionUser;
+      delete conseillerSupprime.actionUser.userId;
 
       await dbDatalake.collection('conseillersSupprimes').updateOne({ _id: conseillerSupprime._id }, { $set: conseillerSupprime }, { upsert: true });
       resolve();
