@@ -7,9 +7,7 @@ const getStatsStMartin = async (db, query) => {
         departement: '97150', //on taggue donc ici en 97150
         year: { $year: '$createdAt' },
         month: { $month: '$createdAt' } },
-      count: { $sum: {
-        $cond: [{ '$gt': ['$cra.nbParticipants', 0] }, '$cra.nbParticipants', 1] //Si nbParticipants alors c'est collectif sinon 1
-      } } } },
+      count: { $sum: '$cra.nbParticipants' } } },
       { $project: { 'departement': '$departement', 'mois': '$month', 'annee': '$year', 'valeur': '$count' } },
       { $out: 'temporary_stmartin_departements_cras' }
     ]
