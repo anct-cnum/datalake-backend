@@ -1,17 +1,4 @@
-const getCnfsFormation = async (db, logger) => {
-  const moment = require('moment');
-  const departements = require('../../../../data/departements-region.json');
-  const key = moment(new Date()).format('DD/MM/YYYY');
-  const date = new Date().setUTCHours(0, 0, 0, 0);
-  const toms = new Map();
-  const addTomStMartin = (data, results, nomColonne) => {
-    results.push({
-      'numeroDepartement': '978',
-      'departement': toms.get('971').tom_name,
-      'region': toms.get('971').tom_name,
-      [nomColonne]: data ?? 0
-    });
-  };
+const getCnfsFormation = async (db, logger, addTomStMartin, key, date, departements) => {
   //Nombre de conseillers en formation par département
   const conseillersEnFormation = await db.collection('conseillers').find({
     statut: { $eq: 'RECRUTE' },
