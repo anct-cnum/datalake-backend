@@ -15,7 +15,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
   const date = new Date().setUTCHours(0, 0, 0, 0);
   const departements = require('../../../data/departements-region.json');
   const tomsJSON = require('../../../data/tom.json');
-  const conseillersEnFormationDepartement = await formation.getCnfsFormation(db, logger)
+  const conseillersEnFormationDepartement = await formation.getCnfsFormation(db, logger);
   const toms = new Map();
   for (const value of tomsJSON) {
     toms.set(String(value.num_tom), value);
