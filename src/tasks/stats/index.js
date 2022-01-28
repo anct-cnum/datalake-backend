@@ -5,7 +5,7 @@ const cli = require('commander');
 const { execute } = require('../utils');
 const moment = require('moment');
 const utilsStructure = require('../../utils/index.js');
-
+const formation = require('./formation/cnfsEnFormation.js');
 cli.description('Data pour metabase').parse(process.argv);
 
 execute(__filename, async ({ logger, db, dbDatalake }) => {
@@ -15,6 +15,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
   const date = new Date().setUTCHours(0, 0, 0, 0);
   const departements = require('../../../data/departements-region.json');
   const tomsJSON = require('../../../data/tom.json');
+  const conseillersEnFormationDepartement = await formation.getCnfsFormation(db, logger)
   const toms = new Map();
   for (const value of tomsJSON) {
     toms.set(String(value.num_tom), value);
@@ -326,6 +327,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
 
   try {
     dbDatalake.collection('stats_PostesValidesDepartement').insertOne(postesValidesDepartement);
+    dbDatalake.collection('stats_ConseillersEnFormationDepartement').insertOne(conseillersEnFormationDepartement);
     dbDatalake.collection('stats_ConseillersRecrutesDepartement').insertOne(conseillersRecrutesDepartement);
     dbDatalake.collection('stats_ConseillersFinalisesDepartement').insertOne(conseillersFinalisesDepartement);
     dbDatalake.collection('stats_ConseillersEnPosteDepartement').insertOne(conseillersEnPosteDepartement);
