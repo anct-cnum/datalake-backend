@@ -5,7 +5,7 @@ const cli = require('commander');
 const { execute } = require('../utils');
 const moment = require('moment');
 const utilsStructure = require('../../utils/index.js');
-
+const formation = require('./formation/cnfsEnFormation.js');
 cli.description('Data pour metabase').parse(process.argv);
 
 execute(__filename, async ({ logger, db, dbDatalake }) => {
@@ -36,6 +36,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
     });
   };
 
+  const conseillersEnFormationDepartement = await formation.getCnfsFormation(db, logger, addTomStMartin, key, date, departements);
   let lignes = [];
 
   /* Nombre de postes validés par département */
@@ -326,6 +327,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
 
   try {
     dbDatalake.collection('stats_PostesValidesDepartement').insertOne(postesValidesDepartement);
+    dbDatalake.collection('stats_ConseillersEnFormationDepartement').insertOne(conseillersEnFormationDepartement);
     dbDatalake.collection('stats_ConseillersRecrutesDepartement').insertOne(conseillersRecrutesDepartement);
     dbDatalake.collection('stats_ConseillersFinalisesDepartement').insertOne(conseillersFinalisesDepartement);
     dbDatalake.collection('stats_ConseillersEnPosteDepartement').insertOne(conseillersEnPosteDepartement);
