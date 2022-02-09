@@ -306,8 +306,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
               { 'conseillerObj.dateFinFormation': { $ne: null } },
               { 'conseillerObj.dateFinFormation': { $lte: new Date() } }
             ],
-          },
-        );
+          });
 
         //Enregistrement de la structure dans une collection metabase en upsert
         const queryUpd = {
