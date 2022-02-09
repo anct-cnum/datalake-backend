@@ -286,33 +286,59 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
           { $group: { _id: '$statut', count: { $sum: 1 } } },
         ]).toArray();
 
+        // Nombre de conseillers en formation mis en relation sous status 'finalisee'
+        const nbConseillersEnFormation = await db.collection('misesEnRelation').countDocuments(
+          {
+            'structure.$id': structure._id,
+            'statut': 'finalisee',
+            '$and': [
+              { 'conseillerObj.dateFinFormation': { $ne: null } },
+              { 'conseillerObj.dateFinFormation': { $gte: new Date() } }
+            ],
+          });
+          
+        // Nombre de conseillers en poste mis en relation sous status 'finalisee'
+        const nbConseillersEnPoste = await db.collection('misesEnRelation').countDocuments(
+          {
+            'structure.$id': structure._id,
+            'statut': 'finalisee',
+            '$and': [
+              { 'conseillerObj.dateFinFormation': { $ne: null } },
+              { 'conseillerObj.dateFinFormation': { $lt: new Date() } }
+            ],
+          });
+
         //Enregistrement de la structure dans une collection metabase en upsert
         const queryUpd = {
           idStructure: structure._id
         };
-        const update = { $set: ({
-          nomStructure: structure.insee?.entreprise?.raison_sociale ?? structure.nom,
-          communeInsee: structure.insee?.etablissement?.commune_implantation?.value ?? '',
-          codeCommuneInsee: structure.insee?.etablissement?.adresse?.code_insee_localite ?? '',
-          codeDepartement: structure.codeDepartement !== '00' ? structure.codeDepartement : determineTom(structure.codePostal, structure.codeCommune),
-          departement: structureDepartement,
-          region: structureRegion,
-          nombreConseillersValidesCoselec: coselec?.nombreConseillersCoselec,
-          numeroCoselec: coselec?.numero,
-          type: structure.type === 'PRIVATE' ? 'privée' : 'publique',
-          siret: structure.siret,
-          adresse: adresse,
-          codePostal: structure.codePostal,
-          investissementEstimatifEtat: investissement,
-          zrr: structure.estZRR ? 'oui' : 'non',
-          qpv: structure.qpvStatut ? structure.qpvStatut.toLowerCase() : 'Non défini',
-          LabelFranceServices: label,
-          nbConseillersRecrutees: nbConseillers?.find(stat => stat._id === 'recrutee')?.count ?? 0,
-          nbConseillersFinalisees: nbConseillers?.find(stat => stat._id === 'finalisee')?.count ?? 0,
-          estGrandReseau: structure.reseau ? 'oui' : 'non',
-          nomGrandReseau: structure.reseau ?? '',
-          categorieJuridique: structure.insee?.entreprise?.forme_juridique ?? ''
-        }) };
+        const update = {
+          $set: ({
+            nomStructure: structure.insee?.entreprise?.raison_sociale ?? structure.nom,
+            communeInsee: structure.insee?.etablissement?.commune_implantation?.value ?? '',
+            codeCommuneInsee: structure.insee?.etablissement?.adresse?.code_insee_localite ?? '',
+            codeDepartement: structure.codeDepartement !== '00' ? structure.codeDepartement : determineTom(structure.codePostal, structure.codeCommune),
+            departement: structureDepartement,
+            region: structureRegion,
+            nombreConseillersValidesCoselec: coselec?.nombreConseillersCoselec,
+            numeroCoselec: coselec?.numero,
+            type: structure.type === 'PRIVATE' ? 'privée' : 'publique',
+            siret: structure.siret,
+            adresse: adresse,
+            codePostal: structure.codePostal,
+            investissementEstimatifEtat: investissement,
+            zrr: structure.estZRR ? 'oui' : 'non',
+            qpv: structure.qpvStatut ? structure.qpvStatut.toLowerCase() : 'Non défini',
+            LabelFranceServices: label,
+            nbConseillersRecrutees: nbConseillers?.find(stat => stat._id === 'recrutee')?.count ?? 0,
+            nbConseillersFinalisees: nbConseillers?.find(stat => stat._id === 'finalisee')?.count ?? 0,
+            nbConseillersEnFormation: nbConseillersEnFormation,
+            nbConseillersEnPoste: nbConseillersEnPoste,
+            estGrandReseau: structure.reseau ? 'oui' : 'non',
+            nomGrandReseau: structure.reseau ?? '',
+            categorieJuridique: structure.insee?.entreprise?.forme_juridique ?? ''
+          })
+        };
         const options = { upsert: true };
         await dbDatalake.collection('stats_StructuresValidees').updateOne(queryUpd, update, options);
       } catch (e) {
