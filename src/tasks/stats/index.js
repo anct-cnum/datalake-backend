@@ -287,22 +287,22 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
         ]).toArray();
 
         // Nombre de conseillers en formation mis en relation sous status 'finalisee'
-        let nbConseillersEnFormation = await db.collection('misesEnRelation').countDocuments(
+        const nbConseillersEnFormation = await db.collection('misesEnRelation').countDocuments(
           {
-            'structureObj._id': structure._id,
+            'structure.$id': structure._id,
             'statut': 'finalisee',
-            $and: [
+            '$and': [
               { 'conseillerObj.dateFinFormation': { $ne: null } },
               { 'conseillerObj.dateFinFormation': { $gte: new Date() } }
             ],
           });
           
         // Nombre de conseillers en poste mis en relation sous status 'finalisee'
-        let nbConseillersEnPoste = await db.collection('misesEnRelation').countDocuments(
+        const nbConseillersEnPoste = await db.collection('misesEnRelation').countDocuments(
           {
-            'structureObj._id': structure._id,
+            'structure.$id': structure._id,
             'statut': 'finalisee',
-            $and: [
+            '$and': [
               { 'conseillerObj.dateFinFormation': { $ne: null } },
               { 'conseillerObj.dateFinFormation': { $lte: new Date() } }
             ],
