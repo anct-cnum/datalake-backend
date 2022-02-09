@@ -304,7 +304,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
             'statut': 'finalisee',
             '$and': [
               { 'conseillerObj.dateFinFormation': { $ne: null } },
-              { 'conseillerObj.dateFinFormation': { $lte: new Date() } }
+              { 'conseillerObj.dateFinFormation': { $lt: new Date() } }
             ],
           });
 
