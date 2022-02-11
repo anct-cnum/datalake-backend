@@ -310,7 +310,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
 
         //Enregistrement de la structure dans une collection metabase en upsert
         const queryUpd = {
-          idStructure: structure._id
+          idStructure: encrypt(structure._id.toString())
         };
         const update = {
           $set: ({
