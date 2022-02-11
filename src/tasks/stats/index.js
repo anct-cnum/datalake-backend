@@ -4,6 +4,7 @@
 const cli = require('commander');
 const { execute } = require('../utils');
 const moment = require('moment');
+const { encrypt } = require('../../utils/encrypt');
 const utilsStructure = require('../../utils/index.js');
 const formation = require('./formation/cnfsEnFormation.js');
 cli.description('Data pour metabase').parse(process.argv);
@@ -310,7 +311,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
 
         //Enregistrement de la structure dans une collection metabase en upsert
         const queryUpd = {
-          idStructure: structure._id
+          idStructure: encrypt(structure._id.toString())
         };
         const update = {
           $set: ({
