@@ -49,7 +49,8 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
         'userCreated',
         'cv',
         'estRecrute',
-        'userCreationError'
+        'userCreationError',
+        'structureId'
       ];
 
       for (const property in conseiller) {
@@ -65,6 +66,10 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
       delete conseiller.pix?.datePartage;
       if (conseiller.dateDeNaissance !== undefined) {
         conseiller.dateDeNaissance = dayjs(conseiller.dateDeNaissance).dayOfYear(1).toDate();
+      }
+
+      if (conseiller.structureId !== undefined) {
+        conseiller.structureId = encrypt(conseiller.structureId.toString());
       }
 
       await dbDatalake.collection('conseillers').updateOne({ _id: conseiller._id }, { $set: conseiller }, { upsert: true });
