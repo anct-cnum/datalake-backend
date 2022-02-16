@@ -23,14 +23,12 @@ execute(__filename, async ({ logger, app, dbDatalake }) => {
   structures.forEach(structure => {
     promises.push(new Promise(async resolve => {
       try {
-
         structure.dernierCoselec = utils.getCoselec(structure); // Cherche le bon Coselec
         delete structure.contact;
         delete structure.prefet;
 
         // Récupération des stats associées
         const stats = await dbDatalake.collection('stats_StructuresValidees').findOne({ idStructure: structure._id });
-
         structure.stats = {
           investissementEstimatifEtat: stats?.investissementEstimatifEtat ?? '?',
           nbConseillersEnFormation: stats?.nbConseillersEnFormation ?? '?',
@@ -47,7 +45,9 @@ execute(__filename, async ({ logger, app, dbDatalake }) => {
     }));
   });
   await Promise.all(promises);
+
   logger.info(`Préparation des données structures : OK`);
+
   const promise = new Promise(async (resolve, reject) => {
     const today = dayjs(new Date()).format('YYYY-MM-DD');
     const s3 = awsUtils.initAWS(app.get('aws'));
@@ -57,10 +57,12 @@ execute(__filename, async ({ logger, app, dbDatalake }) => {
       Body: structuresTransformees.map(JSON.stringify).join('\n'), //ndjson
       ContentType: 'application/x-ndjson'
     };
+
     logger.info(`Upload du fichier structures sur S3 en cours...`);
+
     s3.upload(params, (S3error, data) => {
       if (S3error) {
-        logger.error(`Export du fichier structures SIT sur S3 : ${S3error}`);
+        logger.error(`Erreur export du fichier structures SIT sur S3 : ${S3error}`);
         reject(S3error);
         return;
       }

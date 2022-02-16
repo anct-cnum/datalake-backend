@@ -13,9 +13,12 @@ cli.description('Export conseillers recrutés pour le projet SIT')
 
 execute(__filename, async ({ logger, app, dbDatalake }) => {
   const promise = new Promise(async (resolve, reject) => {
+    logger.info(`Début de préparation des données conseillers...`);
     const today = dayjs(new Date()).format('YYYY-MM-DD');
     const query = { statut: 'RECRUTE' };
     const conseillers = await dbDatalake.collection('conseillers').find(query).toArray();
+
+    logger.info(`Préparation des données conseillers : OK`);
 
     const s3 = awsUtils.initAWS(app.get('aws'));
     const params = {
@@ -29,7 +32,7 @@ execute(__filename, async ({ logger, app, dbDatalake }) => {
 
     s3.upload(params, (S3error, data) => {
       if (S3error) {
-        logger.error(`Export du fichier cnfs SIT sur S3 : ${S3error}`);
+        logger.error(`Erreur export du fichier cnfs SIT sur S3 : ${S3error}`);
         reject(S3error);
         return;
       }
