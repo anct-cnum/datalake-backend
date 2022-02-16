@@ -48,7 +48,7 @@ execute(__filename, async ({ logger, app, dbDatalake }) => {
 
   logger.info(`Préparation des données structures : OK`);
 
-  const promise = new Promise(async (resolve, reject) => {
+  await new Promise(async (resolve, reject) => {
     const today = dayjs(new Date()).format('YYYY-MM-DD');
     const s3 = awsUtils.initAWS(app.get('aws'));
     const params = {
@@ -70,5 +70,4 @@ execute(__filename, async ({ logger, app, dbDatalake }) => {
       resolve(data);
     });
   });
-  await promise;
 });

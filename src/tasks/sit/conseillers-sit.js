@@ -12,7 +12,7 @@ cli.description('Export conseillers recrutés pour le projet SIT')
 .parse(process.argv);
 
 execute(__filename, async ({ logger, app, dbDatalake }) => {
-  const promise = new Promise(async (resolve, reject) => {
+  await new Promise(async (resolve, reject) => {
     logger.info(`Début de préparation des données conseillers...`);
     const today = dayjs(new Date()).format('YYYY-MM-DD');
     const query = { statut: 'RECRUTE' };
@@ -40,5 +40,4 @@ execute(__filename, async ({ logger, app, dbDatalake }) => {
       resolve(data);
     });
   });
-  await promise;
 });
