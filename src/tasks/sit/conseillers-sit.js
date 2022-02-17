@@ -25,7 +25,8 @@ execute(__filename, async ({ logger, app, dbDatalake }) => {
       Bucket: app.get('aws').sit_bucket,
       Key: `cnfs_sit_${today}.ndjson`,
       Body: conseillers.map(JSON.stringify).join('\n'), //ndjson
-      ContentType: 'application/x-ndjson'
+      ContentType: 'application/x-ndjson',
+      ACL: 'public-read'
     };
 
     logger.info(`Upload du fichier cnfs sur S3 en cours...`);
