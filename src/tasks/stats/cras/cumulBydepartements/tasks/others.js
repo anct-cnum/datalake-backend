@@ -1,6 +1,6 @@
-const getStatsAllOthers = async db => {
+const getStatsAllOthers = async dbDatalake => {
 
-  await db.collection('cras').aggregate(
+  await dbDatalake.collection('cras').aggregate(
     [
       { $match: {
         $and: [
