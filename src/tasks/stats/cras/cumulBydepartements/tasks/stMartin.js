@@ -1,6 +1,6 @@
-const getStatsStMartin = async db => {
+const getStatsStMartin = async dbDatalake => {
 
-  await db.collection('cras').aggregate(
+  await dbDatalake.collection('cras').aggregate(
     [
       { $match: { 'cra.codePostal': { $eq: '97150' } } },
       { $group: { _id: {
