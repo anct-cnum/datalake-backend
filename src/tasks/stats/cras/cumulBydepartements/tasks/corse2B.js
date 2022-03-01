@@ -1,6 +1,6 @@
-const getStatsCorse2B = async db => {
+const getStatsCorse2B = async dbDatalake => {
 
-  await db.collection('cras').aggregate(
+  await dbDatalake.collection('cras').aggregate(
     [
       { $match: { 'cra.codePostal': { $regex: /(?:^202)|(?:^206)/ } } },
       { $group: { _id: {
