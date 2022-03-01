@@ -1,4 +1,4 @@
-const getStatsCorse2A = async db => {
+const getStatsCorse2A = async dbDatalake => {
 
   await dbDatalake.collection('cras').aggregate(
     [
