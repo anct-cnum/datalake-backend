@@ -7,9 +7,7 @@ const getStatsCorse2B = async (db, query) => {
         departement: '2B', //ici on passe en 2B
         year: { $year: '$createdAt' },
         month: { $month: '$createdAt' } },
-      count: { $sum: {
-        $cond: [{ '$gt': ['$cra.nbParticipants', 0] }, '$cra.nbParticipants', 1] //Si nbParticipants alors c'est collectif sinon 1
-      } } } },
+      count: { $sum: '$cra.nbParticipants' } } },
       { $project: { 'departement': '$departement', 'mois': '$month', 'annee': '$year', 'valeur': '$count' } },
       { $out: 'temporary_corse2b_stats_departements_cras' }
     ]
