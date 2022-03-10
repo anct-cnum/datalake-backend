@@ -10,10 +10,14 @@ const getListDepsFormatted = async (dbDatalake, departements) => {
       statDep = await dbDatalake.collection('temporary_doms_stats_departements_cras_cumul').findOne({ '_id.departement': departement['num_dep'].toString() });
     //CAS CORSE 2A
     } else if (departement['num_dep'].toString().startsWith('2A')) {
-      statDep = await dbDatalake.collection('temporary_corse2a_stats_departements_cras_cumul').findOne({ '_id.departement': departement['num_dep'].toString() });
+      statDep = await dbDatalake.collection('temporary_corse2a_stats_departements_cras_cumul').findOne(
+        { '_id.departement': departement['num_dep'].toString() }
+      );
     //CAS CORSE 2B
     } else if (departement['num_dep'].toString().startsWith('2B')) {
-      statDep = await dbDatalake.collection('temporary_corse2b_stats_departements_cras_cumul').findOne({ '_id.departement': departement['num_dep'].toString() });
+      statDep = await dbDatalake.collection('temporary_corse2b_stats_departements_cras_cumul').findOne(
+        { '_id.departement': departement['num_dep'].toString() }
+      );
     } else {
     //CAS NORMAL
       statDep = await dbDatalake.collection('temporary_others_stats_departements_cras_cumul').findOne({ '_id.departement': departement['num_dep'].toString() });
