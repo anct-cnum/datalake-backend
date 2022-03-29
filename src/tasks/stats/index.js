@@ -166,38 +166,6 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
   await Promise.all(promisesConseillers);
   const conseillersEnPosteDepartement = ({ 'key': key, 'date': new Date(date), 'data': lignes });
 
-  /* Nombre de mises en relation de candidats par département */
-  const queryNombreCandidats = [
-    { '$match': { 'conseillerObj.disponible': true, 'statut': { $nin: ['finalisee_non_disponible', 'recrutee', 'finalisee'] } } },
-    { $group: { _id: '$structureObj.codeDepartement', count: { $sum: 1 } } },
-    { $sort: { _id: 1 } }
-  ];
-  const listCandidats = await db.collection('misesEnRelation').aggregate(queryNombreCandidats).toArray();
-  lignes = [];
-  if (listCandidats.length > 0) {
-    listCandidats.forEach(candidat => {
-      departements.forEach(departement => {
-        if (String(departement.num_dep) === String(candidat._id)) {
-          lignes.push({
-            'numeroDepartement': candidat._id,
-            'departement': departement.dep_name,
-            'region': departement.region_name,
-            'nombreCandidats': candidat.count
-          });
-        }
-      });
-    });
-  }
-  //Cas Tom Saint Martin
-  const listCandidatsStMartin = await db.collection('misesEnRelation').countDocuments({
-    'conseillerObj.disponible': true,
-    'statut': { $nin: ['finalisee_non_disponible', 'recrutee', 'finalisee'] },
-    'structureObj.codePostal': '97150'
-  });
-  addTomStMartin(listCandidatsStMartin, lignes, 'nombreCandidats');
-  const candidats = ({ 'key': key, 'date': new Date(date), 'data': lignes });
-
-
   /* Nombre de structures candidates par département */
   const queryNombreStructures = [
     { $match: { statut: 'CREEE' } },
@@ -297,7 +265,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
               { 'conseillerObj.dateFinFormation': { $gte: new Date() } }
             ],
           });
-          
+
         // Nombre de conseillers en poste mis en relation sous status 'finalisee'
         const nbConseillersEnPoste = await db.collection('misesEnRelation').countDocuments(
           {
@@ -358,7 +326,6 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
     dbDatalake.collection('stats_ConseillersRecrutesDepartement').insertOne(conseillersRecrutesDepartement);
     dbDatalake.collection('stats_ConseillersFinalisesDepartement').insertOne(conseillersFinalisesDepartement);
     dbDatalake.collection('stats_ConseillersEnPosteDepartement').insertOne(conseillersEnPosteDepartement);
-    dbDatalake.collection('stats_Candidats').insertOne(candidats);
     dbDatalake.collection('stats_StructuresCandidates').insertOne(structuresCandidates);
   } catch (error) {
     logger.error(error);
