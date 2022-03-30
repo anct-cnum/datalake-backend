@@ -79,13 +79,6 @@ module.exports = {
       db.collection('stats_ConseillersFinalisesDepartement').createIndex({ 'data.region': 1 })
     ]);
   },
-  stats_Candidats: db => {
-    return Promise.all([
-      db.collection('stats_Candidats').createIndex({ 'date': 1 }, { unique: true }),
-      db.collection('stats_Candidats').createIndex({ 'data.numeroDepartement': 1 }),
-      db.collection('stats_Candidats').createIndex({ 'data.region': 1 })
-    ]);
-  },
   stats_StructuresCandidates: db => {
     return Promise.all([
       db.collection('stats_StructuresCandidates').createIndex({ 'date': 1 }, { unique: true }),
