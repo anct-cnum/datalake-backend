@@ -5,7 +5,10 @@ const { execute } = require('../utils');
 const { encrypt } = require('../../utils/encrypt');
 
 execute(__filename, async ({ logger, db, dbDatalake }) => {
-  const cras = await db.collection('cras').find({}).toArray();
+  let startDate = new Date();
+  startDate.setDate(startDate.getDate() - 2); //On reprend à partir d'avant hier (trop de données => toArray en erreur)
+  startDate.setUTCHours(0, 0, 0, 0);
+  const cras = await db.collection('cras').find({ createdAt: { $gte: startDate } }).toArray();
   let count = 0;
   const promises = [];
   cras.forEach(cra => {
