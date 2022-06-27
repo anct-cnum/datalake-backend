@@ -72,7 +72,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
         conseiller.structureId = encrypt(conseiller.structureId.toString());
       }
 
-      await dbDatalake.collection('conseillers').updateOne({ _id: conseiller._id }, { $set: conseiller }, { upsert: true });
+      await dbDatalake.collection('conseillers').replaceOne({ _id: conseiller._id }, conseiller, { upsert: true });
       resolve();
     }));
   });
