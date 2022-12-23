@@ -9,9 +9,9 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
   startDate.setDate(startDate.getDate() - 2); //On reprend à partir d'avant hier (trop de données => toArray en erreur)
   startDate.setUTCHours(0, 0, 0, 0);
   const cras = await db.collection('cras').find({ $or: [
-    { createdAt: { $gte: startDate }},
-    { updatedAt: { $gte: startDate }}
-  ]}).toArray();
+    { createdAt: { $gte: startDate } },
+    { updatedAt: { $gte: startDate } }
+  ] }).toArray();
   let count = 0;
   const promises = [];
   cras.forEach(cra => {
@@ -48,7 +48,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
   //Suppression des cras dans le datalake suite à la suppression par des conseillers
   let countDeleted = 0;
   const promisesDelete = [];
-  const deletedCras = await db.collection('cras_deleted').find({ deletedAt: { $gte: startDate }}).toArray();
+  const deletedCras = await db.collection('cras_deleted').find({ deletedAt: { $gte: startDate } }).toArray();
 
   deletedCras.forEach(cra => {
     cra._id = encrypt(cra._id.toString());
