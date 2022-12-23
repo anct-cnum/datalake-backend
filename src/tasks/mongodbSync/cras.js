@@ -8,7 +8,10 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
   let startDate = new Date();
   startDate.setDate(startDate.getDate() - 2); //On reprend à partir d'avant hier (trop de données => toArray en erreur)
   startDate.setUTCHours(0, 0, 0, 0);
-  const cras = await db.collection('cras').find({ createdAt: { $gte: startDate } }).toArray();
+  const cras = await db.collection('cras').find({ $or: [
+    { createdAt: { $gte: startDate }},
+    { updatedAt: { $gte: startDate }}
+  ]}).toArray();
   let count = 0;
   const promises = [];
   cras.forEach(cra => {
@@ -19,7 +22,10 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
         '_id',
         'cra',
         'conseiller',
-        'createdAt'
+        'structure',
+        'permanence',
+        'createdAt',
+        'updatedAt'
       ];
 
       for (const property in cra) {
@@ -38,4 +44,23 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
   });
   await Promise.all(promises);
   logger.info(`${count} CRA synced to datalake`);
+
+  //Suppression des cras dans le datalake suite à la suppression par des conseillers
+  let countDeleted = 0;
+  const promisesDelete = [];
+  const deletedCras = await db.collection('cras_deleted').find({  deletedAt: { $gte: startDate }}).toArray();
+
+  deletedCras.forEach(cra => {
+    cra._id = encrypt(cra._id.toString());
+    promisesDelete.push(new Promise(async resolve => {
+      await dbDatalake.collection('cras').deleteOne({
+        _id: cra._id
+      }).then(
+        countDeleted++
+      );
+      resolve();
+    }));
+  });
+  await Promise.all(promisesDelete);
+  logger.info(`${countDeleted} CRA deleted to datalake`);
 });
