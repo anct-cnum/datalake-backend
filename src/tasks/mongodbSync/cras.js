@@ -36,11 +36,11 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
 
       cra._id = encrypt(cra._id.toString());
       cra.conseillerId = encrypt(cra.conseiller.oid.toString());
-      if (cra?.permanence) {
+      if (cra.permanence) {
         cra.permanenceId = encrypt(cra.permanence.oid.toString());
         delete cra.permanence;
       }
-      if (cra?.structure) {
+      if (cra.structure) {
         cra.structureId = encrypt(cra.structure.oid.toString());
         delete cra.structure;
       }
