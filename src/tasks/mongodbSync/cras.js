@@ -46,7 +46,6 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
   logger.info(`${count} CRA synced to datalake`);
 
   //Suppression des cras dans le datalake suite à la suppression par des conseillers
-  let countDeleted = 0;
   const promisesDelete = [];
   const deletedCras = await db.collection('cras_deleted').find({ deletedAt: { $gte: startDate } }).toArray();
 
@@ -55,12 +54,10 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
     promisesDelete.push(new Promise(async resolve => {
       await dbDatalake.collection('cras').deleteOne({
         _id: cra._id
-      }).then(
-        countDeleted++
-      );
+      });
       resolve();
     }));
   });
   await Promise.all(promisesDelete);
-  logger.info(`${countDeleted} CRA deleted to datalake`);
+  logger.info(`CRAs deleted to datalake`);
 });
