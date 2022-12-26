@@ -36,11 +36,15 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
 
       cra._id = encrypt(cra._id.toString());
       cra.conseillerId = encrypt(cra.conseiller.oid.toString());
-      cra.permanenceId = encrypt(cra.permanence.oid.toString());
-      cra.structureId = encrypt(cra.structure.oid.toString());
+      if (cra?.permanence) {
+        cra.permanenceId = encrypt(cra.permanence.oid.toString());
+        delete cra.permanence;
+      }
+      if (cra?.structure) {
+        cra.structureId = encrypt(cra.structure.oid.toString());
+        delete cra.structure;
+      }
       delete cra.conseiller;
-      delete cra.permanence;
-      delete cra.structure;
 
       await dbDatalake.collection('cras').replaceOne({ _id: cra._id }, cra, { upsert: true });
       resolve();
