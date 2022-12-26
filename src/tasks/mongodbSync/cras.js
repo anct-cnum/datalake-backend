@@ -38,7 +38,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
       cra.conseillerId = encrypt(cra.conseiller.oid.toString());
       delete cra.conseiller;
 
-      await dbDatalake.collection('cras').updateOne({ _id: cra._id }, { $set: cra }, { upsert: true });
+      await dbDatalake.collection('cras').replaceOne({ _id: cra._id }, cra, { upsert: true });
       resolve();
     }));
   });
