@@ -100,7 +100,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
 
   /* Nombre de conseillers finalisés par département */
   const queryNombreConseillersFinalisesDepartement = [
-    { '$match': { 'statut': { $eq: 'finalisee' } } },
+    { '$match': { 'statut': { $in: ['finalisee', 'nouvelle_rupture'] } } },
     { $group: { _id: '$structureObj.codeDepartement', count: { $sum: 1 } } },
     { $sort: { _id: 1 } }
   ];
@@ -122,7 +122,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
   }
   //Cas Tom Saint Martin
   const listConseillersFinalisesStMartin = await db.collection('misesEnRelation').countDocuments({
-    'statut': { $eq: 'finalisee' },
+    'statut': { $in: ['finalisee', 'nouvelle_rupture'] },
     'structureObj.codePostal': '97150'
   });
   addTomStMartin(listConseillersFinalisesStMartin, lignes, 'nombreConseillers');
@@ -251,7 +251,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
 
         // Nombre de conseillers 'recrutee' et 'finalisee'
         let nbConseillers = await db.collection('misesEnRelation').aggregate([
-          { $match: { 'structure.$id': structure._id, 'statut': { $in: ['recrutee', 'finalisee'] } } },
+          { $match: { 'structure.$id': structure._id, 'statut': { $in: ['recrutee', 'finalisee', 'nouvelle_rupture'] } } },
           { $group: { _id: '$statut', count: { $sum: 1 } } },
         ]).toArray();
 
@@ -259,7 +259,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
         const nbConseillersEnFormation = await db.collection('misesEnRelation').countDocuments(
           {
             'structure.$id': structure._id,
-            'statut': 'finalisee',
+            'statut': { $in: ['finalisee', 'nouvelle_rupture'] },
             '$and': [
               { 'conseillerObj.dateFinFormation': { $ne: null } },
               { 'conseillerObj.dateFinFormation': { $gte: new Date() } }
@@ -270,7 +270,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
         const nbConseillersEnPoste = await db.collection('misesEnRelation').countDocuments(
           {
             'structure.$id': structure._id,
-            'statut': 'finalisee',
+            'statut': { $in: ['finalisee', 'nouvelle_rupture'] },
             '$and': [
               { 'conseillerObj.dateFinFormation': { $ne: null } },
               { 'conseillerObj.dateFinFormation': { $lt: new Date() } }
@@ -300,7 +300,9 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
             qpv: structure.qpvStatut ? structure.qpvStatut.toLowerCase() : 'Non défini',
             LabelFranceServices: label,
             nbConseillersRecrutees: nbConseillers?.find(stat => stat._id === 'recrutee')?.count ?? 0,
-            nbConseillersFinalisees: nbConseillers?.find(stat => stat._id === 'finalisee')?.count ?? 0,
+            nbConseillersFinalisees:
+              (nbConseillers?.find(stat => stat._id === 'finalisee')?.count ?? 0) +
+              (nbConseillers?.find(stat => stat._id === 'nouvelle_rupture')?.count ?? 0),
             nbConseillersEnFormation: nbConseillersEnFormation,
             nbConseillersEnPoste: nbConseillersEnPoste,
             estGrandReseau: structure.reseau ? 'oui' : 'non',
