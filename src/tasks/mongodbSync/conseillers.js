@@ -50,7 +50,9 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
         'cv',
         'estRecrute',
         'userCreationError',
-        'structureId'
+        'structureId',
+        'codeDepartementStructure',
+        'codeRegionStructure'
       ];
 
       for (const property in conseiller) {
