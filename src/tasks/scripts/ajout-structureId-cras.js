@@ -43,7 +43,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
   const arrayIdConseiller = await idConseillerDbAndDatalake(db);
   const idConseillerMatchDatalake = await idCnMatchCraSansStructureId(dbDatalake)(arrayIdConseiller);
   const conseillerCraToUpdate = arrayIdConseiller.filter(e => idConseillerMatchDatalake.includes(e.idConseillerDatalake));
-  const conseillerCraToUpdateLimit = idConseillerMatchDatalake.slice(~~program.limit);
+  const conseillerCraToUpdateLimit = conseillerCraToUpdate.slice(~~program.limit);
   let modifiedCount = 0;
 
   try {
