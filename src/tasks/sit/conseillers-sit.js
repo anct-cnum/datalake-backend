@@ -12,6 +12,12 @@ cli.description('Export conseillers recrutés pour le projet SIT')
 .parse(process.argv);
 
 execute(__filename, async ({ logger, app, dbDatalake }) => {
+
+  if (!app.get('aws').endpoint) {
+    logger.info('AWS non configuré sur la PF');
+    return;
+  }
+
   await new Promise(async (resolve, reject) => {
     logger.info(`Début de préparation des données conseillers...`);
     const today = dayjs(new Date()).format('YYYY-MM-DD');

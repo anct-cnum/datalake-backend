@@ -13,6 +13,12 @@ cli.description('Export structures validées en Coselec pour le projet SIT')
 .parse(process.argv);
 
 execute(__filename, async ({ logger, app, dbDatalake }) => {
+
+  if (!app.get('aws').endpoint) {
+    logger.info('AWS non configuré sur la PF');
+    return;
+  }
+
   logger.info(`Début de préparation des données structures...`);
   const query = { statut: 'VALIDATION_COSELEC' };
   const structures = await dbDatalake.collection('structures').find(query).toArray();
