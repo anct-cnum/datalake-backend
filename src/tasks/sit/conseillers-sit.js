@@ -13,10 +13,7 @@ cli.description('Export conseillers recrutés pour le projet SIT')
 
 execute(__filename, async ({ logger, app, dbDatalake }) => {
 
-  logger.info(app.get('aws').endpoint);
-
-
-  if (!app.get('aws').endpoint) {
+  if (app.get('aws').endpoint === 'none') {
     logger.info('AWS non configuré sur la PF');
     return;
   }

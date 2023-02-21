@@ -14,7 +14,7 @@ cli.description('Export structures validées en Coselec pour le projet SIT')
 
 execute(__filename, async ({ logger, app, dbDatalake }) => {
 
-  if (!app.get('aws').endpoint) {
+  if (app.get('aws').endpoint === 'none') {
     logger.info('AWS non configuré sur la PF');
     return;
   }
