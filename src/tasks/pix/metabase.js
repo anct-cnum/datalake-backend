@@ -9,6 +9,8 @@ const { getToken, apiCallPOST } = require('../../utils/metabase');
 
 execute(__filename, async ({ logger, exit, app, dbDatalake }) => {
 
+  console.log(app.get('metabase_pix').endpoint);
+
   if (!app.get('metabase_pix').endpoint) {
     logger.info('Metabase pix non configuré sur la PF');
     return;
