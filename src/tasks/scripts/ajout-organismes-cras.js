@@ -1,37 +1,44 @@
 #!/usr/bin/env node
 'use strict';
 
+require('dotenv').config();
+
 const { execute } = require('../utils');
-const { encrypt } = require('../../utils/encrypt');
+const { program } = require('commander');
 
-const getCrasSansOrganisme = dbDatalake => async () =>
-  await dbDatalake.collection('cras').find({ 'cra.organisme': { '$eq': null, '$exists': true } }).toArray();
+const getCrasSansOrganisme = dbDatalake => async limit =>
+  await dbDatalake.collection('cras').find({ 'cra.organisme': { '$eq': null, '$exists': true } }).limit(limit).toArray();
 
-const getCrasAvecOrganisme = dbDatalake => async () =>
-  await dbDatalake.collection('cras').find({ 'cra.organisme': { '$ne': null } }).toArray();
+const getCrasAvecOrganisme = dbDatalake => async limit =>
+  await dbDatalake.collection('cras').find({ 'cra.organisme': { '$ne': null } }).limit(limit).toArray();
 
 const updateCraDatalake = dbDatalake => async (craId, cra) => await dbDatalake.collection('cras').updateOne(
-  { _id: encrypt(craId.toString())
+  { _id: craId
   }, {
     $set: {
       cra: cra
     }
   });
 
-execute(__filename, async ({ logger, db }) => {
+execute(__filename, async ({ logger, dbDatalake }) => {
+  program.option('-l, --limit <limit>', 'limit');
+  program.helpOption('-e', 'HELP command');
+  program.parse(process.argv);
   let modifiedCountSansOrganisme = 0;
   let modifiedCountAvecOrganisme = 0;
+  const limit = program._optionValues.limit ? ~~program._optionValues.limit : 1;
 
   /*1ère étape : s'occuper des cras sans organisme */
   logger.info(`Traitement des cras sans organisme`);
-  const crasSansOrganisme = await getCrasSansOrganisme(db)();
+  const crasSansOrganisme = await getCrasSansOrganisme(dbDatalake)(limit);
+  console.log(crasSansOrganisme);
   try {
     let promisesSansOrganisme = [];
     crasSansOrganisme?.forEach(cra => {
       promisesSansOrganisme.push(new Promise(async resolve => {
         delete cra.cra.organisme;
         cra.cra.organismes = null;
-        updateCraDatalake(db)(cra._id, cra.cra);
+        updateCraDatalake(dbDatalake)(cra._id, cra.cra);
         modifiedCountSansOrganisme++;
         resolve();
       }));
@@ -43,14 +50,14 @@ execute(__filename, async ({ logger, db }) => {
 
   /*2ème étape : s'occuper des cras avec organisme */
   logger.info(`Traitement des cras avec organisme`);
-  const crasAvecOrganisme = await getCrasAvecOrganisme(db)();
+  const crasAvecOrganisme = await getCrasAvecOrganisme(dbDatalake)(limit);
   try {
     let promisesAvecOrganisme = [];
     crasAvecOrganisme?.forEach(cra => {
       promisesAvecOrganisme.push(new Promise(async resolve => {
         cra.cra.organismes = [{ [cra.cra.organisme]: cra.cra.accompagnement.redirection }];
         delete cra.cra.organisme;
-        updateCraDatalake(db)(cra._id, cra.cra);
+        updateCraDatalake(dbDatalake)(cra._id, cra.cra);
         modifiedCountAvecOrganisme++;
         resolve();
       }));
