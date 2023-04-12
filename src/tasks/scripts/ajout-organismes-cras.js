@@ -31,7 +31,7 @@ execute(__filename, async ({ logger, dbDatalake }) => {
   /*1ère étape : s'occuper des cras sans organisme */
   logger.info(`Traitement des cras sans organisme`);
   const crasSansOrganisme = await getCrasSansOrganisme(dbDatalake)(limit);
-  console.log(crasSansOrganisme);
+
   try {
     let promisesSansOrganisme = [];
     crasSansOrganisme?.forEach(cra => {
