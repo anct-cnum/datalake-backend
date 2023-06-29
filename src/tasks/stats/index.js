@@ -213,12 +213,12 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
         }
 
         // Adresse
-        let adresse = (structure?.insee?.etablissement?.adresse?.numero_voie ?? '') + ' ' +
-          (structure?.insee?.etablissement?.adresse?.type_voie ?? '') + ' ' +
-          (structure?.insee?.etablissement?.adresse?.nom_voie ?? '') + ' ' +
-          (structure?.insee?.etablissement?.adresse?.complement_adresse ? structure.insee.etablissement.adresse.complement_adresse + ' ' : '') +
-          (structure?.insee?.etablissement?.adresse?.code_postal ?? '') + ' ' +
-          (structure?.insee?.etablissement?.adresse?.localite ?? '');
+        let adresse = (structure?.insee?.adresse?.numero_voie ?? '') + ' ' +
+          (structure?.insee?.adresse?.type_voie ?? '') + ' ' +
+          (structure?.insee?.adresse?.libelle_voie ?? '') + ' ' +
+          (structure?.insee?.adresse?.complement_adresse ? structure.insee.adresse.complement_adresse + ' ' : '') +
+          (structure?.insee?.adresse?.code_postal ?? '') + ' ' +
+          (structure?.insee?.adresse?.libelle_commune ?? '');
 
         //Coût par cnfs (formation + tenue/equipement + certification)
         const coutCnfs = 4805 + 297.228 + 326.6;
@@ -283,9 +283,9 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
         };
         const update = {
           $set: ({
-            nomStructure: structure.insee?.entreprise?.raison_sociale ?? structure.nom,
-            communeInsee: structure.insee?.etablissement?.commune_implantation?.value ?? '',
-            codeCommuneInsee: structure.insee?.etablissement?.adresse?.code_insee_localite ?? '',
+            nomStructure: structure.insee?.unite_legale?.personne_morale_attributs?.raison_sociale ?? structure.nom,
+            communeInsee: structure.insee?.adresse?.libelle_commune ?? '',
+            codeCommuneInsee: structure.insee?.adresse?.code_commune ?? '',
             codeDepartement: structure.codeDepartement !== '00' ? structure.codeDepartement : determineTom(structure.codePostal, structure.codeCommune),
             departement: structureDepartement,
             region: structureRegion,
@@ -307,7 +307,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
             nbConseillersEnPoste: nbConseillersEnPoste,
             estGrandReseau: structure.reseau ? 'oui' : 'non',
             nomGrandReseau: structure.reseau ?? '',
-            categorieJuridique: structure.insee?.entreprise?.forme_juridique ?? ''
+            categorieJuridique: structure.insee?.unite_legale?.forme_juridique?.libelle ?? ''
           })
         };
         const options = { upsert: true };
