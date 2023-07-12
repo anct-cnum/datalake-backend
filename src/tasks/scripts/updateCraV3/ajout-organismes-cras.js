@@ -3,7 +3,7 @@
 
 require('dotenv').config();
 
-const { execute } = require('../utils');
+const { execute } = require('../../utils');
 const { program } = require('commander');
 
 const getCrasSansOrganisme = dbDatalake => async limit =>
@@ -29,22 +29,26 @@ execute(__filename, async ({ logger, dbDatalake }) => {
   const limit = program._optionValues.limit ? ~~program._optionValues.limit : 1;
 
   /*1ère étape : s'occuper des cras sans organisme */
+
   logger.info(`Traitement des cras sans organisme`);
   const crasSansOrganisme = await getCrasSansOrganisme(dbDatalake)(limit);
+  if (crasSansOrganisme.length > 0) {
+    try {
+      let promisesSansOrganisme = [];
+      crasSansOrganisme?.forEach(cra => {
+        promisesSansOrganisme.push(new Promise(async resolve => {
+          delete cra.cra.organisme;
+          cra.cra.organismes = null;
+          await updateCraDatalake(dbDatalake)(cra._id, cra.cra);
+          modifiedCountSansOrganisme++;
+          resolve();
+        }));
+      });
 
-  try {
-    let promisesSansOrganisme = [];
-    crasSansOrganisme?.forEach(cra => {
-      promisesSansOrganisme.push(new Promise(async resolve => {
-        delete cra.cra.organisme;
-        cra.cra.organismes = null;
-        updateCraDatalake(dbDatalake)(cra._id, cra.cra);
-        modifiedCountSansOrganisme++;
-        resolve();
-      }));
-    });
-  } catch (error) {
-    logger.info(`Une erreurs s'est produite lors de la mise à jour des CRAs`, error);
+      await Promise.all(promisesSansOrganisme);
+    } catch (error) {
+      logger.info(`Une erreurs s'est produite lors de la mise à jour des CRAs`, error);
+    }
   }
   logger.info(`${modifiedCountSansOrganisme} CRAs sans organisme mis à jour`);
 
@@ -57,11 +61,13 @@ execute(__filename, async ({ logger, dbDatalake }) => {
       promisesAvecOrganisme.push(new Promise(async resolve => {
         cra.cra.organismes = [{ [cra.cra.organisme]: cra.cra.accompagnement.redirection }];
         delete cra.cra.organisme;
-        updateCraDatalake(dbDatalake)(cra._id, cra.cra);
+        await updateCraDatalake(dbDatalake)(cra._id, cra.cra);
         modifiedCountAvecOrganisme++;
         resolve();
       }));
     });
+
+    await Promise.all(promisesAvecOrganisme);
   } catch (error) {
     logger.info(`Une erreurs s'est produite lors de la mise à jour des CRAs`, error);
   }
