@@ -17,7 +17,7 @@ const getConseillerSupprimesRupture = async db => {
   return result.map(e => ({ idConseillerDB: e.conseiller._id, ruptureDB: e.conseiller.ruptures, idConseillerDatalake: encrypt(e.conseiller._id.toString()) }));
 };
 
-const updateCraDatalake = dbDatalake => async (conseillerId, structureId, dateRupture) => await dbDatalake.collection('cras').updateMany({
+const updateCraDatalake = dbDatalake => async (conseillerId, structureId) => await dbDatalake.collection('cras').updateMany({
   'conseillerId': conseillerId,
   'structureId': { '$exists': false },
 
