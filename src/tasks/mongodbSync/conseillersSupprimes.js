@@ -71,7 +71,7 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
       delete conseillerSupprime.actionUser?.userId;
 
       await dbDatalake.collection('conseillersSupprimes').updateOne({ _id: conseillerSupprime._id }, { $set: conseillerSupprime }, { upsert: true });
-      const conseiller = await dbDatalake.collection('conseillers').deleteOne({ '_id': conseillerSupprime.conseiller._id });
+      const conseiller = await dbDatalake.collection('conseillers').findOne({ '_id': conseillerSupprime.conseiller._id });
       if (conseiller) {
         await dbDatalake.collection('conseillers').deleteOne({ '_id': conseillerSupprime.conseiller._id });
       }
