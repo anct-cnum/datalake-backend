@@ -8,10 +8,8 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
   const countConseillers = await db.collection('conseillers').countDocuments({});
   const total = countConseillersSupprimes + countConseillers;
 
-  const conseillersTotal = await dbDatalake.collection('conseillersTotal').find({}).toArray();
-
   await dbDatalake.collection('conseillersTotal').updateOne(
-    { _id: conseillersTotal[0]?._id },
+    { },
     { $set: { totalConseillers: total } },
     { upsert: true }
   );
