@@ -17,8 +17,8 @@ execute(__filename, async ({ logger, dbDatalake }) => {
   const { noDate } = program._optionValues;
   const promises = [];
   const datePremierCra = dayjs(new Date('2021-07-12 00:00:00')).toDate();
-  const dateDebut = dayjs().utcOffset(0).startOf('date').toDate();
-  const dateFin = dayjs().utcOffset(0).endOf('date').toDate();
+  const dateDebut = dayjs().subtract(1, 'day').utcOffset(0).startOf('date').toDate();
+  const dateFin = dayjs().subtract(1, 'day').utcOffset(0).endOf('date').toDate();
 
   try {
     departements.forEach(departement => {
