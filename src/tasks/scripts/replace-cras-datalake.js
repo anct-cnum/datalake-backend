@@ -30,7 +30,9 @@ execute(__filename, async ({ logger, db, dbDatalake }) => {
   };
 
   const lotsArray = await calculLots();
-  console.log('lotsArray:', lotsArray);
+
+  logger.info(`Début des ${lotsArray.length} lots...`);
+
   for (const lot of lotsArray) {
     const cras = await db.collection('cras').find({ $or: [
       { createdAt: { $lte: startDate } },
