@@ -4,5 +4,4 @@ cd ${APP_HOME}
 
 echo "Stats monthly CRAs by departements: START\n"
 node src/tasks/stats/cras/monthlyBydepartements/index.js
-node src/tasks/stats/cras/crasBydepartements/index.js
 echo "Stats monthly CRAs by departements: END\n"
