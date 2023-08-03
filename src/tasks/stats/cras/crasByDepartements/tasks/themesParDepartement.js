@@ -6,7 +6,8 @@ const getThemesParDepartement = dbDatalake => async query => {
       { $match: { ...query } },
       { $group: { _id: '$cra.themes', count: { $sum: 1 } } },
       { $project: { '_id': 0, 'nom': '$_id', 'valeur': '$count' } }
-    ]
+    ],
+    { allowDiskUse: true }
   ).toArray();
   const thematiques = {};
   themes.forEach(theme => {
@@ -19,7 +20,8 @@ const getThemesParDepartement = dbDatalake => async query => {
       { $match: { ...query } },
       { $group: { _id: '$cra.sousThemes', count: { $sum: 1 } } },
       { $project: { '_id': 0, 'nom': '$_id', 'valeur': '$count' } }
-    ]
+    ],
+    { allowDiskUse: true }
   ).toArray();
 
   return { 'themes': thematiques, sousThemes };

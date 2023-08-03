@@ -13,7 +13,8 @@ const getAgesParDepartement = dbDatalake => async query => await dbDatalake.coll
       'de12a18ans': '$de12a18ans', 'de18a35ans': '$de18a35ans',
       'de35a60ans': '$de35a60ans', 'plus60ans': '$plus60ans'
     } }
-  ]
+  ],
+  { allowDiskUse: true }
 ).toArray();
 
 module.exports = { getAgesParDepartement };

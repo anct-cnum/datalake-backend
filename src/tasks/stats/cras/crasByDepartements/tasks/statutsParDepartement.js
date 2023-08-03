@@ -13,7 +13,8 @@ const getStatutsParDepartement = dbDatalake => async query => await dbDatalake.c
       'sansEmploi': '$sansEmploi', 'enEmploi': '$enEmploi',
       'retraite': '$retraite', 'heterogene': '$heterogene'
     } }
-  ]
+  ],
+  { allowDiskUse: true }
 ).toArray();
 
 module.exports = { getStatutsParDepartement };
