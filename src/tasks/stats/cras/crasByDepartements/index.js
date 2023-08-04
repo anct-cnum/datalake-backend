@@ -31,6 +31,7 @@ const findAndInsertStats = async (dbDatalake, query, departement) => {
     'repartition_statuts': statutsParDepartement,
     'repartition_thematiques': themesParDepartement.themes,
     'repartition_sous_thematiques': themesParDepartement.sousThemes,
+    'updatedAt': new Date(),
   };
 
   await statsAlltasks.insertStatsOutilPrefet(dbDatalake)(statsOutilPrefet);
@@ -58,6 +59,7 @@ execute(__filename, async ({ logger, dbDatalake }) => {
           //Lorsque les codeCommune seront importer => 'cra.codeCommune': { $regex: new RegExp(regex) },
           'cra.codePostal': { $regex: new RegExp(regex) }
         };
+
         await findAndInsertStats(dbDatalake, query, departement);
         resolve();
       }));
