@@ -18,6 +18,8 @@ execute(__filename, async ({ logger, dbDatalake }) => {
 
   logger.info('Modification des ids suite à la fusion des doublons de permanences');
 
+  //eslint-disable-next-line max-len
+  //idPermanence|estStructure|nomEnseigne|numeroTelephone|email|siteWeb|siret|adresse|location|horaires|typeAcces|conseillers|lieuPrincipalPour|conseillersItinerants|structure|updatedAt|updatedBy|doublons
   fs.createReadStream('data/imports/permanences-doublons.csv')
   .pipe(csv({ separator: ';' }))
   .on('data', data => permanences.push(data))
@@ -36,6 +38,6 @@ execute(__filename, async ({ logger, dbDatalake }) => {
     });
     Promise.all(promises);
   });
-  
+
   logger.info(`${nbMaj} CRAs mis à jour`);
 });
