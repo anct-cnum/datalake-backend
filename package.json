@@ -21,8 +21,7 @@
     "config": "config/"
   },
   "engines": {
-    "node": ">= 19.7.0",
-    "npm": ">= 3.0.0"
+    "node": "20.12.2"
   },
   "scripts": {
     "test": "npm run lint && npm run mocha",
