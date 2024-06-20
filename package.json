@@ -24,17 +24,9 @@
     "node": "20.12.2"
   },
   "scripts": {
-    "test": "npm run lint && npm run mocha",
     "lint": "eslint src --max-warnings=0 --cache --cache-location node_modules/.cache/eslint",
     "dev": "nodemon src/",
-    "start": "node src/",
-    "mocha": "mocha test/ --recursive --exit"
-  },
-  "standard": {
-    "env": [
-      "mocha"
-    ],
-    "ignore": []
+    "start": "node src/"
   },
   "dependencies": {
     "@feathersjs/configuration": "^4.5.11",

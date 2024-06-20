@@ -338,27 +338,9 @@
     },
     "env": {
       "node": true,
-      "es6": true,
-      "mocha": true
+      "es6": true
     },
     "parserOptions": {
       "ecmaVersion": 2020
-    },
-    "overrides": [
-      {
-        "files": ["tests/stress/*.js"],
-        "parserOptions": {
-          "sourceType": "module"
-        }
-      },      {
-        "files": [
-          "tests/stress/*.js",
-          "**/*.spec.js",
-          "**/*.spec.jsx"
-        ],
-        "env": {
-          "jest": true
-        }
-      }
-    ]
+    }
   }
