@@ -1,7 +1,5 @@
 [
     "30 0 * * * $ROOT/src/tasks/jobs/mongodb-sync.sh",
     "0 11 * * * $ROOT/src/tasks/jobs/import-metabase-pix.sh",
-    "30 1 * * * $ROOT/src/tasks/jobs/stats.sh",
-    "0 3 1 * * $ROOT/src/tasks/jobs/stats-monthly-cras.sh",
     "0 2 * * * $ROOT/src/tasks/jobs/exports-sit.sh"
 ]
