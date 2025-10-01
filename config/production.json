@@ -3,6 +3,8 @@
   "port": "PORT",
   "mongodbDatalake": "MONGODB_DATALAKE",
   "mongodb": "MONGODB",
+  "mongodb_monitor_commands": false,
+  "mongodb_logger_level": "error",
   "metabase_pix": {
     "endPoint": "PIX_METABASE_ENDPOINT",
     "login": "PIX_METABASE_LOGIN",
