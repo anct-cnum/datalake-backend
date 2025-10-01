@@ -1,61 +1,34 @@
 {
   "name": "datalake-backend",
-  "description": "",
-  "version": "0.0.0",
-  "homepage": "",
-  "private": true,
-  "main": "src",
-  "keywords": [
-    "feathers"
-  ],
-  "author": {
-    "name": "Loïc Guillois",
-    "email": "contact@loicguillois.fr"
-  },
-  "contributors": [],
-  "bugs": {},
-  "directories": {
-    "lib": "src",
-    "test": "test/",
-    "config": "config/"
-  },
-  "engines": {
-    "node": ">= 19.7.0",
-    "npm": ">= 3.0.0"
-  },
+  "version": "1.0.0",
+  "license": "AGPL-3.0",
   "scripts": {
-    "test": "npm run lint && npm run mocha",
-    "lint": "eslint src/. test/. --config .eslintrc.json --fix",
-    "dev": "nodemon src/",
-    "start": "node src/",
-    "mocha": "mocha test/ --recursive --exit"
-  },
-  "standard": {
-    "env": [
-      "mocha"
-    ],
-    "ignore": []
+    "dev": "NODE_ENV=development nodemon src",
+    "lint": "eslint src --max-warnings=0 --cache --cache-location node_modules/.cache/eslint",
+    "start": "node src"
   },
   "dependencies": {
     "@feathersjs/configuration": "^4.5.11",
-    "@feathersjs/errors": "^4.5.11",
     "@feathersjs/express": "^4.5.11",
     "@feathersjs/feathers": "^4.5.11",
-    "@feathersjs/transport-commons": "^4.5.11",
-    "aws-sdk": "^2.1074.0",
-    "axios": "^0.24.0",
+    "aws-sdk": "^2.1692.0",
+    "axios": "^1.12.2",
     "commander": "^8.3.0",
-    "compression": "^1.7.4",
+    "compression": "^1.8.1",
     "cors": "^2.8.5",
-    "dayjs": "^1.10.7",
+    "dayjs": "^1.11.18",
     "dotenv": "^10.0.0",
     "helmet": "^4.6.0",
-    "moment": "^2.29.1",
+    "moment": "^2.30.1",
     "mongodb": "^4.2.1",
-    "serve-favicon": "^2.5.0",
-    "winston": "^3.3.3"
+    "nodemon": "^3.1.10",
+    "serve-favicon": "^2.5.1",
+    "winston": "^3.18.3"
   },
   "devDependencies": {
     "eslint": "^8.5.0"
+  },
+  "engines": {
+    "node": "20.12.2"
   }
 }
