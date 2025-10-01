@@ -12,7 +12,7 @@
     "@feathersjs/express": "^4.5.11",
     "@feathersjs/feathers": "^4.5.11",
     "aws-sdk": "^2.1692.0",
-    "axios": "^0.30.2",
+    "axios": "^1.12.2",
     "commander": "^8.3.0",
     "compression": "^1.8.1",
     "cors": "^2.8.5",
